@@ -20,7 +20,6 @@
 #include <string.h>
 
 #include "hardware_legacy/wifi.h"
-#include "libwpa_client/wpa_ctrl.h"
 
 #define LOG_TAG "WifiHW"
 #include "cutils/log.h"
