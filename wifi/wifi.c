@@ -428,31 +428,7 @@ int wifi_wait_for_event(char *buf, size_t buflen)
     struct timeval tval;
     struct timeval *tptr;
     
-    if (monitor_conn == NULL) {
-        LOGD("Connection closed\n");
-        strncpy(buf, WPA_EVENT_TERMINATING " - connection closed", buflen-1);
-        buf[buflen-1] = '\0';
-        return strlen(buf);
-    }
-
-    result = wpa_ctrl_recv(monitor_conn, buf, &nread);
-    if (result < 0) {
-        LOGD("wpa_ctrl_recv failed: %s\n", strerror(errno));
-        strncpy(buf, WPA_EVENT_TERMINATING " - recv error", buflen-1);
-        buf[buflen-1] = '\0';
-        return strlen(buf);
-    }
-    buf[nread] = '\0';
-    /* LOGD("wait_for_event: result=%d nread=%d string=\"%s\"\n", result, nread, buf); */
-    /* Check for EOF on the socket */
-    if (result == 0 && nread == 0) {
-        /* Fabricate an event to pass up */
-        LOGD("Received EOF on supplicant socket\n");
-        strncpy(buf, WPA_EVENT_TERMINATING " - signal 0 received", buflen-1);
-        buf[buflen-1] = '\0';
-        return strlen(buf);
-    }
-    /*
+/*
      * Events strings are in the format
      *
      *     <N>CTRL-EVENT-XXX 
